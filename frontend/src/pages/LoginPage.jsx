@@ -1,96 +1,121 @@
-// import React from 'react'
-
-// App.jsx
 import { useState } from 'react';
 
 export default function App() {
   const [isLogin, setIsLogin] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!formData.email || !formData.password) {
+      return alert('Please fill all required fields');
+    }
+
+    if (!isLogin) {
+      if (formData.password !== formData.confirmPassword) {
+        return alert('Passwords do not match');
+      }
+
+      alert('Registration Successful 🎉');
+    } else {
+      alert('Login Successful ✅');
+    }
+
+    console.log(formData);
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-        {/* Heading */}
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-2">
-          {isLogin ? 'Welcome Back' : 'Create Account'}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 px-4">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
+        <h1 className="text-3xl font-bold text-center mb-2">
+          {isLogin ? 'Login' : 'Register'}
         </h1>
 
         <p className="text-center text-gray-500 mb-6">
-          {isLogin ? 'Login to continue' : 'Register to get started'}
+          {isLogin ? 'Welcome back! Please login.' : 'Create your account.'}
         </p>
 
-        {/* Form */}
-        <form className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           {!isLogin && (
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
-                Full Name
-              </label>
-
-              <input
-                type="text"
-                placeholder="Enter your name"
-                className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           )}
 
-          <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">
-              Email
-            </label>
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
+          <div className="relative">
             <input
-              type="email"
-              placeholder="Enter your email"
-              className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </div>
 
-          <div>
-            <label className="block mb-2 text-sm font-medium text-gray-700">
-              Password
-            </label>
-
-            <input
-              type="password"
-              placeholder="Enter your password"
-              className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-3 text-sm text-blue-600"
+            >
+              {showPassword ? 'Hide' : 'Show'}
+            </button>
           </div>
 
           {!isLogin && (
-            <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
-                Confirm Password
-              </label>
-
-              <input
-                type="password"
-                placeholder="Confirm password"
-                className="w-full px-4 py-3 border rounded-xl outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           )}
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-3 rounded-xl font-semibold"
+            className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
           >
             {isLogin ? 'Login' : 'Register'}
           </button>
         </form>
 
-        {/* Switch */}
-        <p className="text-center text-gray-600 mt-6">
-          {isLogin ? "Don't have an account?" : 'Already have an account?'}
-
+        <div className="text-center mt-5">
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="ml-2 text-blue-600 font-semibold hover:underline"
+            className="text-blue-600 font-medium"
           >
-            {isLogin ? 'Register' : 'Login'}
+            {isLogin ? 'Create New Account' : 'Already have an account?'}
           </button>
-        </p>
+        </div>
       </div>
     </div>
   );
